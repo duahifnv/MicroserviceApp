@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fizalise</groupId>
-	<artifactId>InvertoryService</artifactId>
+	<artifactId>InventoryService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>InvertoryService</name>
-	<description>InvertoryService</description>
+	<name>InventoryService</name>
+	<description>InventoryService</description>
 	<url/>
 	<licenses>
 		<license/>
