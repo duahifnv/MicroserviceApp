@@ -1,0 +1,28 @@
+services:
+  mongo-product-database:
+    container_name: mongo-product-database
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: product-database
+    volumes:
+      - mongo-product-data:/data/db
+  pg-order-database:
+    container_name: pg-order-database
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      PGDATA: /var/lib/postgresql/data # Путь, где в контейнере хранятся данные БД
+    volumes:
+      - ./pg-init/order-database:/docker-entrypoint-initdb.d # Папка инициализации БД проекта связан с файлом в контейнере
+      - pg-order-data:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+    restart: unless-stopped # Контейнер не перезагружается сам
+volumes:
+  pg-order-data:
+  mongo-product-data:
