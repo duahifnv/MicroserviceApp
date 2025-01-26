@@ -11,6 +11,7 @@
   <modules>
     <module>ProductService</module>
     <module>OrderService</module>
+    <module>InvertoryService</module>
   </modules>
 
   <properties>
