@@ -23,6 +23,20 @@ services:
     ports:
       - "15432:5432"
     restart: unless-stopped # Контейнер не перезагружается сам
+  pg-inventory-database:
+    container_name: pg-inventory-database
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      PGDATA: /var/lib/postgresql/data # Путь, где в контейнере хранятся данные БД
+    volumes:
+      - ./pg-init/inventory-database:/docker-entrypoint-initdb.d # Папка инициализации БД проекта связан с файлом в контейнере
+      - pg-inventory-data:/var/lib/postgresql/data
+    ports:
+      - "16543:5432"
+    restart: unless-stopped # Контейнер не перезагружается сам
 volumes:
   pg-order-data:
+  pg-inventory-data:
   mongo-product-data:
