@@ -1,5 +1,7 @@
 server:
   port: 8081
+  error:
+    include-message: always
 spring:
   application:
     name: OrderService
@@ -12,3 +14,5 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+inventory-service:
+  url: http://localhost:8082
