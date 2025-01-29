@@ -8,28 +8,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:7080/realms/spring-microservices-security-realm
-  cloud:
-    gateway:
-      mvc:
-        routes:
-          - id: product_service_swagger
-            uri: http://localhost:8080
-            predicates:
-              - Path=/aggregate/product-service/v3/api-docs
-            filters:
-              - SetPath=/api-docs
-          - id: order_service
-            uri: http://localhost:8081
-            predicates:
-              - Path=/aggregate/order-service/v3/api-docs
-            filters:
-              - SetPath=/api-docs
-          - id: inventory_service
-            uri: http://localhost:8082
-            predicates:
-              - Path=/aggregate/inventory-service/v3/api-docs
-            filters:
-              - SetPath=/api-docs
+# Swagger UI & Open API configs
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -42,3 +21,40 @@ springdoc:
         url: /aggregate/inventory-service/v3/api-docs
   api-docs:
     path: /api-docs
+# Actuator endpoints
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  # Resilience4j circuit breaker properties
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true # Synchronizing with management.health
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10 # Calculating failure rate based on X last requests
+        failure-rate-threshold: 50 # X% of requests in sliding window should be failed
+                                   # to OPEN circuit breaker
+        wait-duration-in-open-state: 10s # Waiting X seconds before circuit goes to half-open state
+        permitted-number-of-calls-in-half-open-state: 3 # X failed requests required to go from half-state
+        automatic-transition-from-open-to-half-open-enabled: true
+        minimum-number-of-calls: 5 # Starting failure rate at 5 requests
+  # Resilience4j timeout properties
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 3s
+  # Resilience4j retry properties
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 2s
