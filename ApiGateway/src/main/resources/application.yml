@@ -12,19 +12,6 @@ spring:
     gateway:
       mvc:
         routes:
-          - id: product_service
-            uri: http://localhost:8080
-            predicates:
-              - Path=/api/product/**
-          - id: order_service
-            uri: http://localhost:8081
-            predicates:
-              - Path=/api/order/**
-          - id: inventory_service
-            uri: http://localhost:8082
-            predicates:
-              - Path=/api/inventory/**
-
           - id: product_service_swagger
             uri: http://localhost:8080
             predicates:
@@ -51,7 +38,7 @@ springdoc:
         url: /aggregate/product-service/v3/api-docs
       - name: Order Service
         url: /aggregate/order-service/v3/api-docs
-      - name: InventoryService
+      - name: Inventory Service
         url: /aggregate/inventory-service/v3/api-docs
   api-docs:
     path: /api-docs
