@@ -3,18 +3,22 @@ package com.fizalise.orderservice.service;
 import com.fizalise.orderservice.client.InventoryClient;
 import com.fizalise.orderservice.dto.OrderRequest;
 import com.fizalise.orderservice.entity.Order;
+import com.fizalise.orderservice.event.OrderPlacedEvent;
 import com.fizalise.orderservice.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @Slf4j
-public record OrderService(OrderRepository orderRepository, InventoryClient inventoryClient) {
+public record OrderService(OrderRepository orderRepository, InventoryClient inventoryClient,
+                           KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate) {
     public Order placeOrder(OrderRequest orderRequest) {
         if (!inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -28,7 +32,13 @@ public record OrderService(OrderRepository orderRepository, InventoryClient inve
                 .quantity(orderRequest.quantity())
                 .build();
         orderRepository.save(order);
-        log.info("Order created successfully: {}", order);
+        OrderPlacedEvent orderPlacedEvent = OrderPlacedEvent.builder()
+                        .orderNumber(order.getOrderNumber())
+                        .email(orderRequest.userDetails().email())
+                        .build();
+        log.info("Trying to send OrderPlacedEvent {} to Kafka topic: {}",
+                orderPlacedEvent, "order-placed");
+        kafkaTemplate.send("order-placed", orderPlacedEvent);
         return order;
     }
     public List<Order> getAllOrders() {
