@@ -14,6 +14,14 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  # Kafka properties
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: order-placed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 inventory-service:
   url: http://localhost:8082
 springdoc:
