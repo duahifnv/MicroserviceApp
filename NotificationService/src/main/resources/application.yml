@@ -1,0 +1,43 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: NotificationService
+  # Kafka consumer properties
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notificationService
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: http://127.0.0.1:8085
+        specific.avro.reader: true
+#        spring.json.use.type.headers: false # To prevent type mismatch from other services
+#        spring.json.value.default.type: com.fizalise.notificationservice.event.OrderPlacedEvent
+#                                         # Setting out event type as default type
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: fc24148dc518a6
+    password: 4bc27075ea90d6
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: NotificationService
+  tracing:
+    sampling:
+      probability: 1.0 # 100% of traces will be sampled
