@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fizalise</groupId>
-	<artifactId>ApiGateway</artifactId>
+	<artifactId>api-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ApiGateway</name>
-	<description>ApiGateway</description>
+	<name>api-gateway</name>
+	<description>API gateway for microservices</description>
 	<url/>
 	<licenses>
 		<license/>

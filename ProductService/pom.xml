@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fizalise</groupId>
-	<artifactId>ProductService</artifactId>
+	<artifactId>product-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ProductService</name>
-	<description>ProductService</description>
+	<name>product-service</name>
+	<description>Service for product control</description>
 	<url/>
 	<licenses>
 		<license/>
