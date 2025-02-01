@@ -14,14 +14,16 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-  # Kafka properties
+  # Kafka producer properties
   kafka:
     bootstrap-servers: localhost:9092
     template:
       default-topic: order-placed
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://127.0.0.1:8085
 inventory-service:
   url: http://localhost:8082
 springdoc:
@@ -37,10 +39,25 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
   endpoint:
     health:
       show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: OrderService
+  tracing:
+    sampling:
+      probability: 1.0 # 100% of traces will be sampled
+
 resilience4j:
   # Resilience4j circuit breaker properties
   circuitbreaker:

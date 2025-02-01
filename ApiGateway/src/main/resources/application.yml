@@ -29,10 +29,25 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
   endpoint:
     health:
       show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: ApiGateway
+  tracing:
+    sampling:
+      probability: 1.0 # 100% of traces will be sampled
+
 resilience4j:
   # Resilience4j circuit breaker properties
   circuitbreaker:
