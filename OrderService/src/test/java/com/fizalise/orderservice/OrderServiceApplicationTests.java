@@ -34,7 +34,12 @@ class OrderServiceApplicationTests {
 				{
 				    "skuCode": "samsung_note_22",
 				    "price": 1200,
-				    "quantity": 1
+				    "quantity": 1,
+				    "userDetails": {
+						"email": "igor@mail.ru",
+						"firstName": "Igor",
+						"lastName": "Vihorkov"
+					}
 				}
 				""";
 		/*
@@ -60,7 +65,12 @@ class OrderServiceApplicationTests {
 				{
 				    "skuCode": "samsung_note_22",
 				    "price": 1200,
-				    "quantity": 1
+				    "quantity": 1,
+				    "userDetails": {
+						"email": "igor@mail.ru",
+						"firstName": "Igor",
+						"lastName": "Vihorkov"
+					}
 				}
 				""";
 		InventoryClientStub.stubInventoryCall_returnsFalse("samsung_note_22", 1);
