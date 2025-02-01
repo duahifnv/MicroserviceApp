@@ -11,7 +11,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +31,11 @@ public record OrderService(OrderRepository orderRepository, InventoryClient inve
                 .quantity(orderRequest.quantity())
                 .build();
         orderRepository.save(order);
-        OrderPlacedEvent orderPlacedEvent = OrderPlacedEvent.builder()
-                        .orderNumber(order.getOrderNumber())
-                        .email(orderRequest.userDetails().email())
-                        .build();
+        OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
+        orderPlacedEvent.setOrderNumber(order.getOrderNumber());
+        orderPlacedEvent.setEmail(orderRequest.userDetails().email());
+        orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
+        orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
         log.info("Trying to send OrderPlacedEvent {} to Kafka topic: {}",
                 orderPlacedEvent, "order-placed");
         kafkaTemplate.send("order-placed", orderPlacedEvent);
