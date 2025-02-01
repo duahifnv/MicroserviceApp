@@ -1,2 +1,13 @@
 inventory-service:
   url: http://localhost:${wiremock.server.port}
+  # Kafka producer properties
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: order-placed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://127.0.0.1:8085
