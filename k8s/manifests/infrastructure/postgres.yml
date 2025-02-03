@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+# Creating a server pod with 1 container based on postgres image
+kind: Deployment
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  strategy: {}
+  # Describing pods specification
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        # pgSQL 17.2 container
+        - image: postgres:17.2
+          name: postgres
+          ports:
+            - containerPort: 5432
+          resources: {}
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres_password
+            - name: PG_DATA
+              value: /var/lib/postgresql/data
+          # Mounting pod volumes to container volumes
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data # Container volume
+              name: postgres-data # Pod volume
+            - mountPath: /docker-entrypoint-initdb.d
+              name: postgres-initdb-config
+      volumes:
+        - name: postgres-data
+          # Pod volume data from pvc
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+        - name: postgres-initdb-config
+          configMap:
+            name: postgres-initdb-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  # Deploying pod to port 5432 (service port)
+  # from 5432 (container pod) by TCP
+  ports:
+    - port: 5432 # service port
+      protocol: TCP
+      targetPort: 5432 # container pod
+  selector:
+    app: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+# Secret data
+data:
+  postgres_password: c2VjcmV0 # password: "secret"
+---
+# Volumes from pod
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/postgres # Path to data on local machine
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-initdb-config
+data:
+  # Database initialization configuration
+  initdb.sql: |
+    CREATE DATABASE order_service;
+    CREATE DATABASE inventory_service;
+    CREATE DATABASE keycloak;
