@@ -1,12 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.2</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
   <groupId>com.fizalise</groupId>
   <artifactId>microservice-app</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-
   <name>microservice-app</name>
+
   <modules>
     <module>ProductService</module>
     <module>OrderService</module>
@@ -22,6 +29,35 @@
     <maven.compiler.target>21</maven.compiler.target>
     <spring.boot.maven.plugin.version>3.4.1</spring.boot.maven.plugin.version>
     <spring.boot.dependencies.version>3.4.1</spring.boot.dependencies.version>
-    <spring.cloud-version>2024.0.0</spring.cloud-version>
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
+    <dockerAccessToken>${DOCKER_HUB_TOKEN}</dockerAccessToken>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <image>
+            <name>fizalise/new-${project.artifactId}</name>
+            <builder>dashaun/builder:tiny</builder>
+            <publish>true</publish>
+          </image>
+          <docker>
+            <publishRegistry>
+              <username>fizalise</username>
+              <password>${dockerAccessToken}</password>
+            </publishRegistry>
+          </docker>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
