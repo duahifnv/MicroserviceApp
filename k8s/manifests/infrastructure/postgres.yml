@@ -1,17 +1,17 @@
 apiVersion: apps/v1
-# Creating a server pod with 1 container based on postgres image
+# Creating a deployment with 1 pod with 1 container based on postgres image
 kind: Deployment
 metadata:
   labels:
     app: postgres
   name: postgres
 spec:
-  replicas: 1
+  replicas: 1 # Creating 1 pod on initialization
   selector:
     matchLabels:
-      app: postgres
+      app: postgres # Pods with metadata "app: postgres" will be managed by this deployment
   strategy: {}
-  # Describing pods specification
+  # Describing pods, created by this specification
   template:
     metadata:
       labels:
@@ -56,12 +56,12 @@ metadata:
     app: postgres
   name: postgres
 spec:
-  # Deploying pod to port 5432 (service port)
-  # from 5432 (container pod) by TCP
+  # Deploying pod to port 5432 (localhost port)
+  # from 5432 (pod port) by TCP
   ports:
-    - port: 5432 # service port
+    - port: 5432 # port
       protocol: TCP
-      targetPort: 5432 # container pod
+      targetPort: 5432 # pod port
   selector:
     app: postgres
 ---
