@@ -24,6 +24,13 @@
 - **Docker** & **Kubernetes** - деплой приложения на локальной машине
 
 <br>![screenshot](images/app-schema.png)
+## Эндпоинты приложения
+Для получения ресурсов от сервера предоставлены следующие эндпоинты:
+- ``/api/product/`` - доступ к ProductService
+- ``/api/order/`` - доступ к OrderService
+- ``/api/inventory/`` - доступ к InventoryService
+> [!IMPORTANT]
+> Информация обо всех эндпоинтах представлена по эндпоинту ``/swagger-ui.html`` (OpenAPI Specification)
 ## Деплой (docker-compose.yml)
 1. Установите Docker Desktop на свой ПК (для daemon-а) https://docs.docker.com/desktop/setup/install/windows-install/
 2. Клонируйте репозиторий в желаемую папку
@@ -45,7 +52,9 @@
     ```
    
 5. Откройте папку с проектом с помощью любой IDE, и запустите **каждый** из модулей
-6. Доступ к эндпоинтам осуществляется по адресу `127.0.0.1:9000`
+6. Конфигурация по умолчанию:
+- Хост: ``127.0.0.1 | localhost``
+- Порт: ``9000``
 
 ## Деплой (kubernetes)
 1. Выполнить пункты 1-3 из раздела **Деплой (docker-compose.yml)**
