@@ -108,4 +108,3 @@ data:
   initdb.sql: |
     CREATE DATABASE order_service;
     CREATE DATABASE inventory_service;
-    CREATE DATABASE keycloak;
