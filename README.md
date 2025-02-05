@@ -13,25 +13,41 @@
 - OrderService - оформление заказов
 - NotificationService - сервис для отправки уведомлений на почту
 - ApiGateway - шлюз для всех сервисов, является входной точкой. Порт ``:9000``
-## Деплой
+## Деплой (docker-compose.yml)
 1. Установите Docker Desktop на свой ПК (для daemon-а) https://docs.docker.com/desktop/setup/install/windows-install/
 2. Клонируйте репозиторий в желаемую папку
    
-    ```
+    ```powershell
     cd <папка, где будет находится проект>
     git clone https://github.com/duahifnv/MicroserviceApp.git
     cd MicroserviceApp
     ```
 3. Проверьте, что docker daemon запущен
    
-   ```
+   ```docker
     docker --version
     ```
 4. Запустите docker контейнеры, необходимые для работы приложения<br>Это займет некоторое время, т.к. будут подгружаться необходимые образы
-   ```
+   ```docker
     docker-compose up
     ```
    
-5. Откройте папку с проектом с помощью любой IDE, и запустите каждый из модулей
+5. Откройте папку с проектом с помощью любой IDE, и запустите **каждый** из модулей
 6. Входной точкой будет адрес ``localhost:9000/..``
+
+## Деплой (kubernetes)
+1. Выполнить пункты 1-3 из раздела **Деплой (docker-compose.yml)**
+2. Установить **kind tool** на свой ПК https://kind.sigs.k8s.io/
+3. Создайте кластер на основе конфигурации по пути ./k8s/kind/kind-config.yaml
    
+   ```powershell
+   kind create cluster --config k8s/kind/kind-config.yaml
+   ```
+4. Примените все манифесты к кластеру при помощи kubectl
+   > Возможно, kubectl не будет предустановлен, и его будет необходимо ставить ручками
+   
+   ```powershell
+   kubectl apply -f k8s/manifests
+   ```
+   Чтобы проверить деплой: ``kubectl get deployment``
+5. Входной точкой будет адрес ``localhost:9000/..``
