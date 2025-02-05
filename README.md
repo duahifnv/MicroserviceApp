@@ -12,7 +12,10 @@
 - InventoryService - учет товаров
 - OrderService - оформление заказов
 - NotificationService - сервис для отправки уведомлений на почту
-- ApiGateway - шлюз для всех сервисов, является входной точкой. Порт ``:9000``
+- ApiGateway - шлюз для всех сервисов, является входной точкой.
+- localhost:9000/swagger-ui.html
+
+<br>![screenshot](images/app-schema.png)
 ## Деплой (docker-compose.yml)
 1. Установите Docker Desktop на свой ПК (для daemon-а) https://docs.docker.com/desktop/setup/install/windows-install/
 2. Клонируйте репозиторий в желаемую папку
@@ -33,7 +36,7 @@
     ```
    
 5. Откройте папку с проектом с помощью любой IDE, и запустите **каждый** из модулей
-6. Входной точкой будет адрес ``localhost:9000/..``
+6. Доступ к эндпоинтам осуществляется по адресу `127.0.0.1:9000`
 
 ## Деплой (kubernetes)
 1. Выполнить пункты 1-3 из раздела **Деплой (docker-compose.yml)**
@@ -50,4 +53,19 @@
    kubectl apply -f k8s/manifests
    ```
    Чтобы проверить деплой: ``kubectl get deployment``
-5. Входной точкой будет адрес ``localhost:9000/..``
+5. Пробросьте необходимые порты
+
+   Порт для API-шлюза (эндпоинты контроллеров)
+   ```powershell
+   kubectl port-forward svc/api-gateway 9000:9000
+   ```
+
+   Порт для Keycloak (Логин - 'admin', пароль - 'admin)
+   ```powershell
+   kubectl port-forward svc/keycloak 8080:8080
+   ```
+
+   Порт для Grafana
+   ```powershell
+   kubectl port-forward svc/grafana 3000:3000
+   ```
